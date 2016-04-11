@@ -20,7 +20,7 @@ PRELOADED_CLASSES := frameworks/base/preloaded-classes
 
 # start of image reserved address space
 LIBART_IMG_HOST_BASE_ADDRESS   := 0x60000000
-LIBART_IMG_TARGET_BASE_ADDRESS := 0x50000000
+LIBART_IMG_TARGET_BASE_ADDRESS := 0x70000000
 
 define get-product-default-property
 $(strip $(patsubst $(1)=%,%,$(filter $(1)=%,$(PRODUCT_DEFAULT_PROPERTY_OVERRIDES))))
