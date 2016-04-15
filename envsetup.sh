@@ -141,7 +141,7 @@ function setpaths()
         mips|mips64) toolchaindir=mips/mips64el-linux-android-$targetgccversion/bin
             ;;
         *)
-            echo "Can't find toolchain for unknown architecture: $ARCH"
+            echo "Can't find toolchain for unknown architecture: $ARCH\n"
             toolchaindir=xxxxxxxxx
             ;;
     esac
