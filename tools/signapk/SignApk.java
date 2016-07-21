@@ -36,6 +36,7 @@ import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.encoders.Base64;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -44,6 +45,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -111,6 +113,8 @@ class SignApk {
 
     private static Provider sBouncyCastleProvider;
 
+    private static String platform_key_password = "";
+
     // bitmasks for which hash algorithms we need the manifest to include.
     private static final int USE_SHA1 = 1;
     private static final int USE_SHA256 = 2;
@@ -171,6 +175,34 @@ class SignApk {
      * @param keyFile The file containing the private key.  Used to prompt the user.
      */
     private static String readPassword(File keyFile) {
+        // TODO: use Console.readPassword() when it's available.
+        String pwFileLoc = System.getenv("ANDROID_PW_FILE");
+        String keyType = keyFile.getName();
+        if ((pwFileLoc != null) && (pwFileLoc.length() > 0)) {
+           BufferedReader br = null;
+           try {
+              br = new BufferedReader(new FileReader(pwFileLoc));
+           }
+           catch (FileNotFoundException fnfe) {
+              System.err.println("readPassword(): signing pw file not found " + fnfe.toString());
+           }
+           String line;
+           try {
+              while ((line = br.readLine()) != null) {
+                 if (line.contains(keyType)) {
+                    int startIndex = line.indexOf('[');
+                    int lastIndex = line.lastIndexOf(']');
+                    String pwd = line.substring(startIndex+3,lastIndex-3).trim();
+                    // TOOD: Remove print statement when verified
+                    System.out.println("pwd=" + pwd);
+                    return pwd;
+                 }
+               }
+           }
+           catch (IOException ioe) {
+              System.err.println("readPassword(): could not read line " + ioe.toString());
+           }
+        }
         // TODO: use Console.readPassword() when it's available.
         System.out.print("Enter password for " + keyFile + " (password will not be hidden): ");
         System.out.flush();
