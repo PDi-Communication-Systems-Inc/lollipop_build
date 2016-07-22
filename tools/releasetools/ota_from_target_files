@@ -618,6 +618,43 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   script.WriteRawImage("/boot", "boot.img")
 
   script.ShowProgress(0.2, 10)
+
+  # PDi mrobbeloth install bootloader
+  processorType =  os.getenv('CORE_TYPE', 'Q')
+  print ('Processor type for bootloader insertion: ' + processorType)
+  script.Print("writing u-boot...")
+  if processorType == 'S': 
+     script.AppendExtra(
+        "package_extract_file(\"u-boot-6solo.imx\", \"/tmp/u-boot-6solo.imx\");")
+  else:
+     script.AppendExtra(
+        "package_extract_file(\"u-boot-6q.imx\", \"/tmp/u-boot-6q.imx\");")
+ 
+  script.ShowProgress(0.1, 5);
+
+  if processorType == 'S':
+     script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
+                                         ("/tmp/u-boot-6solo.imx",
+					 "/dev/block/mmcblk3boot0",
+					 "1024",
+					 "1024"));
+  else:
+     script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
+                                         ("/u-boot-6q.imx",
+                                         "/dev/block/mmcblk3boot0",
+                                         "1024",
+                                         "1024"));
+  if processorType == 'S':
+     f = open(os.getcwd() + 
+              "/out/target/product/ar6mx/" 
+              + "u-boot-6solo.imx", 'r')
+     common.ZipWriteStr(output_zip, "u-boot-6solo.imx", f.read())
+  else:
+     f = open(os.getcwd() + 
+              "/out/target/product/ar6mx/" 
+              + "u-boot-6q.imx", 'r')
+     common.ZipWriteStr(output_zip, "u-boot-6q.imx", f.read())
+
   device_specific.FullOTA_InstallEnd()
 
   if OPTIONS.extra_script is not None:
@@ -1378,6 +1415,41 @@ endif;
 
   WriteMetadata(metadata, output_zip)
 
+  # PDi mrobbeloth install bootloader
+  processorType =  os.getenv('CORE_TYPE', 'Q') 
+  print ('Processor type for bootloader insertion: ' + processorType)
+  script.Print("writing u-boot...")
+  if processorType == 'S': 
+     script.AppendExtra(
+        "package_extract_file(\"u-boot-6solo.imx\", \"/tmp/u-boot-6solo.imx\");")
+  else:
+     script.AppendExtra(
+        "package_extract_file(\"u-boot-6q.imx\", \"/tmp/u-boot-6q.imx\");")
+ 
+  script.ShowProgress(0.1, 5);
+
+  if processorType == 'S': 
+     script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
+                                         ("/tmp/u-boot-6solo.imx",
+                                         "/dev/block/mmcblk3boot0",
+                                         "1024",
+                                         "1024"));
+  else:
+     script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
+                                         ("/u-boot-6q.imx",
+                                         "/dev/block/mmcblk3boot0",
+                                         "1024",
+                                         "1024"));
+  if processorType == 'S': 
+     f = open(os.getcwd() + 
+              "/out/target/product/ar6mx/" 
+              + "u-boot-6solo.imx", 'r') 
+     common.ZipWriteStr(output_zip, "u-boot-6solo.imx", f.read())
+  else:
+     f = open(os.getcwd() + 
+              "/out/target/product/ar6mx/" 
+              + "u-boot-6q.imx", 'r') 
+     common.ZipWriteStr(output_zip, "u-boot-6q.imx", f.read())
 
 def main(argv):
 
