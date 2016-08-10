@@ -193,8 +193,6 @@ class SignApk {
                     int startIndex = line.indexOf('[');
                     int lastIndex = line.lastIndexOf(']');
                     String pwd = line.substring(startIndex+3,lastIndex-3).trim();
-                    // TOOD: Remove print statement when verified
-                    System.out.println("pwd=" + pwd);
                     return pwd;
                  }
                }
