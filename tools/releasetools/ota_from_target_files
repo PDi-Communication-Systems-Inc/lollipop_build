@@ -640,7 +640,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 					 "1024"));
   else:
      script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
-                                         ("/u-boot-6q.imx",
+                                         ("/tmp/u-boot-6q.imx",
                                          "/dev/block/mmcblk3boot0",
                                          "1024",
                                          "1024"));
