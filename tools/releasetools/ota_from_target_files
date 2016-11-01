@@ -1432,13 +1432,13 @@ endif;
      script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
                                          ("/tmp/u-boot-6solo.imx",
                                          "/dev/block/mmcblk3boot0",
-                                         "0",
+                                         "1024",
                                          "0"));
   else:
      script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
                                          ("/u-boot-6q.imx",
                                          "/dev/block/mmcblk3boot0",
-                                         "0",
+                                         "1024",
                                          "0"));
   if processorType == 'S': 
      f = open(os.getcwd() + 
