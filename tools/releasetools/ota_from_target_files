@@ -623,13 +623,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
   processorType =  os.getenv('CORE_TYPE', 'Q')
   print ('Processor type for bootloader insertion: ' + processorType)
   script.Print("writing u-boot...")
-  if processorType == 'S': 
+  if processorType == 'S':
      script.AppendExtra(
         "package_extract_file(\"u-boot-6solo.imx\", \"/tmp/u-boot-6solo.imx\");")
   else:
      script.AppendExtra(
         "package_extract_file(\"u-boot-6q.imx\", \"/tmp/u-boot-6q.imx\");")
- 
+
   script.ShowProgress(0.1, 5);
 
   if processorType == 'S':
@@ -645,13 +645,13 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
                                          "1024",
                                          "0"));
   if processorType == 'S':
-     f = open(os.getcwd() + 
-              "/out/target/product/ar6mx/" 
+     f = open(os.getcwd() +
+              "/out/target/product/ar6mx/"
               + "u-boot-6solo.imx", 'r')
      common.ZipWriteStr(output_zip, "u-boot-6solo.imx", f.read())
   else:
-     f = open(os.getcwd() + 
-              "/out/target/product/ar6mx/" 
+     f = open(os.getcwd() +
+              "/out/target/product/ar6mx/"
               + "u-boot-6q.imx", 'r')
      common.ZipWriteStr(output_zip, "u-boot-6q.imx", f.read())
 
@@ -1416,19 +1416,19 @@ endif;
   WriteMetadata(metadata, output_zip)
 
   # PDi mrobbeloth install bootloader
-  processorType =  os.getenv('CORE_TYPE', 'Q') 
+  processorType =  os.getenv('CORE_TYPE', 'Q')
   print ('Processor type for bootloader insertion: ' + processorType)
   script.Print("writing u-boot...")
-  if processorType == 'S': 
+  if processorType == 'S':
      script.AppendExtra(
         "package_extract_file(\"u-boot-6solo.imx\", \"/tmp/u-boot-6solo.imx\");")
   else:
      script.AppendExtra(
         "package_extract_file(\"u-boot-6q.imx\", \"/tmp/u-boot-6q.imx\");")
- 
+
   script.ShowProgress(0.1, 5);
 
-  if processorType == 'S': 
+  if processorType == 'S':
      script.AppendExtra('''ar6mx.write_bootloader("%s", "%s", "%s", "%s");''' % \
                                          ("/tmp/u-boot-6solo.imx",
                                          "/dev/block/mmcblk3boot0",
@@ -1440,15 +1440,15 @@ endif;
                                          "/dev/block/mmcblk3boot0",
                                          "1024",
                                          "0"));
-  if processorType == 'S': 
-     f = open(os.getcwd() + 
-              "/out/target/product/ar6mx/" 
-              + "u-boot-6solo.imx", 'r') 
+  if processorType == 'S':
+     f = open(os.getcwd() +
+              "/out/target/product/ar6mx/"
+              + "u-boot-6solo.imx", 'r')
      common.ZipWriteStr(output_zip, "u-boot-6solo.imx", f.read())
   else:
-     f = open(os.getcwd() + 
-              "/out/target/product/ar6mx/" 
-              + "u-boot-6q.imx", 'r') 
+     f = open(os.getcwd() +
+              "/out/target/product/ar6mx/"
+              + "u-boot-6q.imx", 'r')
      common.ZipWriteStr(output_zip, "u-boot-6q.imx", f.read())
 
 def main(argv):

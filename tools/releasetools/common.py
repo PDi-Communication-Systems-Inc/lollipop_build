@@ -285,6 +285,9 @@ def BuildBootableImage(sourcedir, fs_config_file, info_dict=None):
   data, or None if sourcedir does not appear to contains files for
   building the requested image."""
 
+  print "BuildBootableImage(): sourcedir=%s " % (sourcedir,)
+  print "BuildBootableImage(): fs_config_file=%s " % (fs_config_file,) 
+
   if (not os.access(os.path.join(sourcedir, "RAMDISK"), os.F_OK) or
       not os.access(os.path.join(sourcedir, "kernel"), os.F_OK)):
     return None
@@ -374,15 +377,21 @@ def GetBootableImage(name, prebuilt_name, unpack_dir, tree_subdir,
   otherwise construct it from the source files in
   'unpack_dir'/'tree_subdir'."""
 
+  print "GetBootableImage working with %s with prebuilt name %s and unpack_dir %s" % (name, prebuilt_name,unpack_dir,)
+
   prebuilt_path = os.path.join(unpack_dir, "BOOTABLE_IMAGES", prebuilt_name)
   if os.path.exists(prebuilt_path):
     print "using prebuilt %s from BOOTABLE_IMAGES..." % (prebuilt_name,)
     return File.FromLocalFile(name, prebuilt_path)
+  else:
+    print "prebuilt_path %s from BOOTABLE IMAGES does not exist" % (prebuilt_name,)
 
   prebuilt_path = os.path.join(unpack_dir, "IMAGES", prebuilt_name)
   if os.path.exists(prebuilt_path):
     print "using prebuilt %s from IMAGES..." % (prebuilt_name,)
     return File.FromLocalFile(name, prebuilt_path)
+  else:
+    print "prebuilt_path %s from IMAGES does not exist" % (prebuilt_name,)
 
   print "building image from target_files %s..." % (tree_subdir,)
   fs_config = "META/" + tree_subdir.lower() + "_filesystem_config.txt"
