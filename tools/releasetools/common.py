@@ -434,6 +434,13 @@ def UnzipTemp(filename, pattern=None):
   else:
     unzip_to_dir(filename, tmp)
 
+  # list extracted files
+  for root, dirs, files in os.walk(tmp):
+     print root
+     print dirs
+     print files
+     print "--------------------------"
+  
   return tmp, zipfile.ZipFile(filename, "r")
 
 
