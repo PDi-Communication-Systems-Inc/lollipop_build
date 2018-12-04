@@ -170,7 +170,9 @@ include $(BUILD_SYSTEM)/dex_preopt_odex_install.mk
 $(built_module) : $(my_prebuilt_src_file) | $(ACP) $(ZIPALIGN) $(SIGNAPK_JAR)
 	$(transform-prebuilt-to-target)
 ifdef extracted_jni_libs
-	$(hide) zip -d $@ 'lib/*.so'  # strip embedded JNI libraries.
+	#$(hide) zip -d $@ 'lib/*.so'  # strip embedded JNI libraries.
+       $(hide) unzip -Z -1 $@ | grep "lib/" | grep -v "/crazy." | xargs zip -d $@ # strip embedded JNI libraries.
+
 endif
 ifneq ($(LOCAL_CERTIFICATE),PRESIGNED)
 	$(sign-package)
