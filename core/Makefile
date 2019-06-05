@@ -915,7 +915,7 @@ endif
 
 .PHONY: bootloader
 ifneq ($(strip $(TARGET_BOOTLOADER_CONFIG)),)
-BOOTLOADER_CROSS_TOOLCHAIN := `pwd`/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
+BOOTLOADER_CROSS_TOOLCHAIN := `pwd`/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-
 BOOTLOADER_ENV := ARCH=arm CROSS_COMPILE=$(BOOTLOADER_CROSS_TOOLCHAIN)
 HOST_PROCESSOR := $(shell cat /proc/cpuinfo | grep processor | wc -l)
 TARGET_BOOTLOADER_IMAGE := $(PRODUCT_OUT)/u-boot.imx
@@ -929,16 +929,13 @@ $(TARGET_BOOTLOADER_IMAGE):
 	for ubootplat in $(TARGET_BOOTLOADER_CONFIG); do \
 		UBOOT_PLATFORM=`echo $$ubootplat | cut -d':' -f1`; \
 		UBOOT_CONFIG=`echo $$ubootplat | cut -d':' -f2`; \
-		echo $(UBOOT_PLATFORM); \
-		echo $(UBOOT_CONFIG); \
-		$(MAKE) -C $(BOOTLOADER_PATH) distclean $(BOOTLOADER_ENV); \
-		$(MAKE) -C $(BOOTLOADER_PATH) $$UBOOT_CONFIG $(BOOTLOADER_ENV); \
-		$(MAKE) -C $(BOOTLOADER_PATH) -j$(HOST_PROCESSOR) $(BOOTLOADER_ENV); \
-		dd if=/dev/zero count=500 bs=1K | tr '\000' '\377' > $(BOOTLOADER_PATH)/u-boot.imx; \
-		dd if=$(BOOTLOADER_PATH)/SPL of=$(BOOTLOADER_PATH)/u-boot.imx conv=notrunc && \
-		dd if=$(BOOTLOADER_PATH)/u-boot.img of=$(BOOTLOADER_PATH)/u-boot.imx bs=1K seek=68 conv=notrunc; \
-		install -D $(BOOTLOADER_PATH)/u-boot.imx $(PRODUCT_OUT)/u-boot-$$UBOOT_PLATFORM.imx; \
-		install -D $(BOOTLOADER_PATH)/u-boot.imx $@; \
+        echo $(UBOOT_PLATFORM); \
+        echo $(UBOOT_CONFIG); \
+		$(MAKE) -C bootable/bootloader/uboot-imx/ distclean $(BOOTLOADER_ENV); \
+		$(MAKE) -C bootable/bootloader/uboot-imx/ $$UBOOT_CONFIG $(BOOTLOADER_ENV); \
+		$(MAKE) -C bootable/bootloader/uboot-imx/ $(BOOTLOADER_ENV); \
+		install -D bootable/bootloader/uboot-imx/u-boot.imx $(PRODUCT_OUT)/u-boot-$$UBOOT_PLATFORM.imx; \
+		install -D bootable/bootloader/uboot-imx/u-boot.imx $@; \
 	done
 else
 bootloader:
@@ -967,9 +964,8 @@ $(TARGET_KERNEL_CONFIGURE): kernel_imx/arch/arm/configs/$(TARGET_KERNEL_DEFCONF)
 	install -D $(KERNEL_CONFIGURE) $(TARGET_KERNEL_CONFIGURE)
 
 $(TARGET_PREBUILT_KERNEL): $(TARGET_KERNEL_CONFIGURE)
-	$(MAKE) -C kernel_imx -j$(HOST_PROCESSOR) prepare $(KERNEL_ENV)
 	$(MAKE) -C kernel_imx -j$(HOST_PROCESSOR) uImage $(KERNEL_ENV)
-	$(MAKE) -C kernel_imx -j$(HOST_PROCESSOR) dtbs $(KERNEL_ENV)
+	$(MAKE) -C kernel_imx dtbs $(KERNEL_ENV)
 	install -D $(KERNEL_ZIMAGE)  $(PRODUCT_OUT)/kernel
 	for dtsplat in $(TARGET_BOARD_DTS_CONFIG); do \
 		DTS_PLATFORM=`echo $$dtsplat | cut -d':' -f1`; \
